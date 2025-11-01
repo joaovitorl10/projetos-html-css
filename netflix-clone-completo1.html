@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Netflix Clone - Filmes e Séries Online</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: #000;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        /* Header Styles */
+        .header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            background: linear-gradient(180deg, rgba(0,0,0,0.7) 10%, transparent);
+            transition: background-color 0.4s;
+            padding: 15px 4%;
+        }
+
+        .header.scrolled {
+            background-color: #000;
+        }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .logo {
+            color: #e50914;
+            font-size: 28px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #b3b3b3;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .search-container {
+            position: relative;
+        }
+
+        .search-input {
+            background: rgba(0,0,0,0.75);
+            border: 1px solid #333;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            width: 250px;
+            display: none;
+        }
+
+        .search-input.active {
+            display: block;
+        }
+
+        .search-btn, .profile-btn {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        .search-btn:hover, .profile-btn:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+
+        .profile-avatar {
+            width: 32px;
+            height: 32px;
+            background: #e50914;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1489599735734-79b4212bdd26?w=1200&h=600&fit=crop');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 500px;
+            margin-left: 4%;
+            z-index: 2;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+        }
+
+        .hero-description {
+            font-size: 1.2rem;
+            line-height: 1.4;
+            margin-bottom: 30px;
+            color: #fff;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            background: white;
+            color: black;
+        }
+
+        .btn-primary:hover {
+            background: rgba(255,255,255,0.8);
+        }
+
+        .btn-secondary {
+            background: rgba(109,109,110,0.7);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(109,109,110,0.4);
+        }
+
+        /* Movie Rows */
+        .content {
+            position: relative;
+            z-index: 10;
+            margin-top: -150px;
+            padding-bottom: 50px;
+        }
+
+        .movie-row {
+            margin-bottom: 40px;
+        }
+
+        .row-title {
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            padding-left: 4%;
+        }
+
+        .movies-container {
+            position: relative;
+            padding: 0 4%;
+        }
+
+        .movies-list {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            padding-bottom: 10px;
+        }
+
+        .movies-list::-webkit-scrollbar {
+            display: none;
+        }
+
+        .movie-card {
+            min-width: 300px;
+            height: 169px;
+            background-size: cover;
+            background-position: center;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.3s, z-index 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .movie-card:hover {
+            transform: scale(1.05);
+            z-index: 100;
+        }
+
+        .movie-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .movie-card:hover::after {
+            opacity: 1;
+        }
+
+        .movie-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 20px;
+            transform: translateY(100%);
+            transition: transform 0.3s;
+            z-index: 2;
+        }
+
+        .movie-card:hover .movie-info {
+            transform: translateY(0);
+        }
+
+        .movie-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .movie-meta {
+            font-size: 0.9rem;
+            color: #b3b3b3;
+            margin-bottom: 10px;
+        }
+
+        .movie-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            width: 32px;
+            height: 32px;
+            border: 2px solid #ddd;
+            border-radius: 50%;
+            background: rgba(42,42,42,0.6);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .action-btn:hover {
+            border-color: white;
+            background: rgba(255,255,255,0.1);
+        }
+
+        .action-btn.play {
+            background: white;
+            color: black;
+            border-color: white;
+        }
+
+        /* Video Player Modal */
+        .video-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.9);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .video-modal.active {
+            display: flex;
+        }
+
+        .video-container {
+            position: relative;
+            width: 90%;
+            max-width: 1000px;
+            aspect-ratio: 16/9;
+            background: #000;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .video-player {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .video-controls {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            padding: 20px;
+            transform: translateY(100%);
+            transition: transform 0.3s;
+        }
+
+        .video-container:hover .video-controls {
+            transform: translateY(0);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.7);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 20px;
+            z-index: 10;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 2px;
+            margin-bottom: 15px;
+            cursor: pointer;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #e50914;
+            border-radius: 2px;
+            width: 0%;
+            transition: width 0.1s;
+        }
+
+        .video-bottom-controls {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .play-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .control-btn {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        .control-btn:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .volume-slider {
+            width: 80px;
+            height: 4px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 2px;
+            cursor: pointer;
+        }
+
+        .time-display {
+            font-size: 14px;
+            color: #b3b3b3;
+        }
+
+        /* Search Results */
+        .search-results {
+            padding: 100px 4% 50px;
+            display: none;
+        }
+
+        .search-results.active {
+            display: block;
+        }
+
+        .search-title {
+            font-size: 1.8rem;
+            margin-bottom: 30px;
+        }
+
+        .search-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .hero-description {
+                font-size: 1rem;
+            }
+
+            .movie-card {
+                min-width: 250px;
+                height: 140px;
+            }
+
+            .search-input {
+                width: 200px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .movie-card {
+                min-width: 200px;
+                height: 112px;
+            }
+
+            .search-input {
+                width: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header" id="header">
+        <nav class="nav">
+            <div class="nav-left">
+                <a href="#" class="logo">NETFLIX</a>
+                <ul class="nav-links">
+                    <li><a href="#">Início</a></li>
+                    <li><a href="#">Séries</a></li>
+                    <li><a href="#">Filmes</a></li>
+                    <li><a href="#">Bombando</a></li>
+                    <li><a href="#">Minha Lista</a></li>
+                </ul>
+            </div>
+            <div class="nav-right">
+                <div class="search-container">
+                    <button class="search-btn" onclick="toggleSearch()">🔍</button>
+                    <input type="text" class="search-input" id="searchInput" placeholder="Títulos, pessoas, gêneros" onkeyup="handleSearch(event)">
+                </div>
+                <button class="profile-btn">🔔</button>
+                <div class="profile-avatar">U</div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main id="mainContent">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1 class="hero-title">Stranger Things</h1>
+                <p class="hero-description">
+                    Quando um garoto desaparece, uma pequena cidade descobre um mistério envolvendo experimentos secretos, forças sobrenaturais aterrorizantes e uma garota muito estranha.
+                </p>
+                <div class="hero-buttons">
+                    <button class="btn btn-primary" onclick="playMovie('Stranger Things', 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4')">
+                        ▶️ Assistir
+                    </button>
+                    <button class="btn btn-secondary">
+                        ℹ️ Mais informações
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Movie Rows -->
+        <div class="content">
+            <div class="movie-row">
+                <h2 class="row-title">Em alta</h2>
+                <div class="movies-container">
+                    <div class="movies-list" id="trending">
+                        <!-- Movies will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="movie-row">
+                <h2 class="row-title">Ação e aventura</h2>
+                <div class="movies-container">
+                    <div class="movies-list" id="action">
+                        <!-- Movies will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="movie-row">
+                <h2 class="row-title">Comédias</h2>
+                <div class="movies-container">
+                    <div class="movies-list" id="comedy">
+                        <!-- Movies will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="movie-row">
+                <h2 class="row-title">Séries populares</h2>
+                <div class="movies-container">
+                    <div class="movies-list" id="series">
+                        <!-- Movies will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Search Results -->
+    <div class="search-results" id="searchResults">
+        <h2 class="search-title" id="searchTitle">Resultados da busca</h2>
+        <div class="search-grid" id="searchGrid">
+            <!-- Search results will be populated here -->
+        </div>
+    </div>
+
+    <!-- Video Player Modal -->
+    <div class="video-modal" id="videoModal">
+        <div class="video-container">
+            <button class="close-btn" onclick="closeVideo()">✕</button>
+            <video class="video-player" id="videoPlayer" controls>
+                <source src="" type="video/mp4">
+                Seu navegador não suporta o elemento de vídeo.
+            </video>
+            <div class="video-controls">
+                <div class="progress-bar" onclick="seekVideo(event)">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="video-bottom-controls">
+                    <div class="play-controls">
+                        <button class="control-btn" onclick="togglePlay()">⏯️</button>
+                        <button class="control-btn" onclick="skipTime(-10)">⏪</button>
+                        <button class="control-btn" onclick="skipTime(10)">⏩</button>
+                        <div class="volume-control">
+                            <button class="control-btn" onclick="toggleMute()">🔊</button>
+                            <div class="volume-slider" onclick="setVolume(event)"></div>
+                        </div>
+                        <span class="time-display" id="timeDisplay">0:00 / 0:00</span>
+                    </div>
+                    <button class="control-btn" onclick="toggleFullscreen()">⛶</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Movie Data
+        const movies = {
+            trending: [
+                {
+                    title: "The Crown",
+                    image: "https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=300&h=450&fit=crop",
+                    video: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+                    year: "2016",
+                    rating: "TV-MA",
+                    duration: "58m"
+                },
+                {
+                    title: "Dark",
+                    image: "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=300&h=450&fit=crop",
+                    video: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+                    year: "2017",
+                    rating: "TV-MA",
+                    duration: "60m"
+                },
+                {
+                    title: "Money Heist",
+                    image: "https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=300&h=450&fit=crop",
+                    video: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+                    year: "2017",
+                    rating: "TV-MA",
+                    duration: "70m"
+                },
+                {
+                    title: "The Witcher",
+                    image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=300&h=450&fit=crop",
+                    video: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
+                    year: "2019",
+                    rating: "TV-MA",
+                    duration: "60m"
+                },
+                {
+                    title: "Bridgerton",
+                    image: "https://images.unsplash.com/photo-1594736797933-d0401ba2fe65?w=300&h=450&fit=crop",
+                    video: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
+                    year: "2020",
+                    rating: "TV-MA",
+                    duration: "57m"
+                }
+            ],
+            action: [
+                {
+                    title: "Extraction",
+                    image: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=300&h=450&fit=crop",
+                    video: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4",
+                    year: "2020",
+                    rating: "R",
+                    duration: "116m"
+                },
+                {
+                    title: "The Old Guard",
+                    image: "https://images.unsplash.com/photo-1509347528160-9a9e33742cdb?w=300&h=450&fit=crop",
+                    video: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",
+                    year: "2020",
+                    rating: "R",
+                    duration: "125m"
+                },
+                {
+                    title: "Red Notice",
+                    image: "https://images.unsplash.com/photo-1489599735734-79b4212bdd26?w=300&h=450&fit=crop",
+                    video: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4",
+                    year: "2021",
+                    rating: "PG-13",
+                    duration: "118m"
+                }
+            ],
+            comedy: [
+                {
+                    title: "The Good Place",
+                    image: "https://images.unsplash.com/photo-1522869635100-9f4c5e86aa37?w=300&h=450&fit=crop",
+                    video: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
+                    year: "2016",
+                    rating: "TV-14",
+                    duration: "22m"
+                },
+                {
+                    title: "Space Force",
+                    image: "https://images.unsplash.com/photo-1446776877081-d282a0f896e2?w=300&h=450&fit=crop",
+                    video: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/VolkswagenGTIReview.mp4",
+                    year: "2020",
+                    rating: "TV-MA",
+                    duration: "30m"
+                }
+            ]
+        };
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            populateMovies();
+            setupScrollHeader();
+        });
+
+        // Populate movie rows
+        function populateMovies() {
+            Object.keys(movies).forEach(category => {
+                const container = document.getElementById(category);
+                if (container) {
+                    movies[category].forEach(movie => {
+                        const movieCard = createMovieCard(movie);
+                        container.appendChild(movieCard);
+                    });
+                }
+            });
+
+            // Populate series with trending movies (reversed)
+            const seriesContainer = document.getElementById('series');
+            if (seriesContainer) {
+                [...movies.trending].reverse().forEach(movie => {
+                    const movieCard = createMovieCard(movie);
+                    seriesContainer.appendChild(movieCard);
+                });
+            }
+        }
+
+        // Create movie card element
+        function createMovieCard(movie) {
+            const card = document.createElement('div');
+            card.className = 'movie-card';
+            card.style.backgroundImage = `url(${movie.image})`;
+            card.onclick = () => playMovie(movie.title, movie.video);
+
+            card.innerHTML = `
+                <div class="movie-info">
+                    <h3 class="movie-title">${movie.title}</h3>
+                    <div class="movie-meta">${movie.year} • ${movie.rating} • ${movie.duration}</div>
+                    <div class="movie-actions">
+                        <button class="action-btn play" onclick="event.stopPropagation(); playMovie('${movie.title}', '${movie.video}')">▶️</button>
+                        <button class="action-btn">➕</button>
+                        <button class="action-btn">👍</button>
+                    </div>
+                </div>
+            `;
+
+            return card;
+        }
+
+        // Header scroll effect
+        function setupScrollHeader() {
+            window.addEventListener('scroll', function() {
+                const header = document.getElementById('header');
+                if (window.scrollY > 100) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
+                }
+            });
+        }
+
+        // Search functionality
+        function toggleSearch() {
+            const searchInput = document.getElementById('searchInput');
+            searchInput.classList.toggle('active');
+            if (searchInput.classList.contains('active')) {
+                searchInput.focus();
+            }
+        }
+
+        function handleSearch(event) {
+            const query = event.target.value.toLowerCase();
+            if (event.key === 'Enter' || query.length > 2) {
+                performSearch(query);
+            } else if (query.length === 0) {
+                hideSearchResults();
+            }
+        }
+
+        function performSearch(query) {
+            const allMovies = [...movies.trending, ...movies.action, ...movies.comedy];
+            const results = allMovies.filter(movie => 
+                movie.title.toLowerCase().includes(query)
+            );
+
+            showSearchResults(results, query);
+        }
+
+        function showSearchResults(results, query) {
+            const mainContent = document.getElementById('mainContent');
+            const searchResults = document.getElementById('searchResults');
+            const searchTitle = document.getElementById('searchTitle');
+            const searchGrid = document.getElementById('searchGrid');
+
+            mainContent.style.display = 'none';
+            searchResults.classList.add('active');
+            searchTitle.textContent = `Resultados para "${query}" (${results.length})`;
+
+            searchGrid.innerHTML = '';
+            results.forEach(movie => {
+                const movieCard = createMovieCard(movie);
+                searchGrid.appendChild(movieCard);
+            });
+        }
+
+        function hideSearchResults() {
+            const mainContent = document.getElementById('mainContent');
+            const searchResults = document.getElementById('searchResults');
+
+            mainContent.style.display = 'block';
+            searchResults.classList.remove('active');
+        }
+
+        // Video player functionality
+        let currentVideo = null;
+
+        function playMovie(title, videoUrl) {
+            const modal = document.getElementById('videoModal');
+            const video = document.getElementById('videoPlayer');
+            
+            video.src = videoUrl;
+            modal.classList.add('active');
+            currentVideo = video;
+            
+            video.play();
+            setupVideoControls();
+        }
+
+        function closeVideo() {
+            const modal = document.getElementById('videoModal');
+            const video = document.getElementById('videoPlayer');
+            
+            modal.classList.remove('active');
+            video.pause();
+            video.src = '';
+            currentVideo = null;
+        }
+
+        function setupVideoControls() {
+            const video = currentVideo;
+            if (!video) return;
+
+            video.addEventListener('timeupdate', updateProgress);
+            video.addEventListener('loadedmetadata', updateDuration);
+        }
+
+        function updateProgress() {
+            const video = currentVideo;
+            if (!video) return;
+
+            const progressFill = document.getElementById('progressFill');
+            const timeDisplay = document.getElementById('timeDisplay');
+            
+            const progress = (video.currentTime / video.duration) * 100;
+            progressFill.style.width = progress + '%';
+            
+            const currentMin = Math.floor(video.currentTime / 60);
+            const currentSec = Math.floor(video.currentTime % 60);
+            const totalMin = Math.floor(video.duration / 60);
+            const totalSec = Math.floor(video.duration % 60);
+            
+            timeDisplay.textContent = `${currentMin}:${currentSec.toString().padStart(2, '0')} / ${totalMin}:${totalSec.toString().padStart(2, '0')}`;
+        }
+
+        function updateDuration() {
+            updateProgress();
+        }
+
+        function togglePlay() {
+            const video = currentVideo;
+            if (!video) return;
+
+            if (video.paused) {
+                video.play();
+            } else {
+                video.pause();
+            }
+        }
+
+        function skipTime(seconds) {
+            const video = currentVideo;
+            if (!video) return;
+
+            video.currentTime += seconds;
+        }
+
+        function seekVideo(event) {
+            const video = currentVideo;
+            if (!video) return;
+
+            const progressBar = event.currentTarget;
+            const clickX = event.offsetX;
+            const width = progressBar.offsetWidth;
+            const newTime = (clickX / width) * video.duration;
+            
+            video.currentTime = newTime;
+        }
+
+        function toggleMute() {
+            const video = currentVideo;
+            if (!video) return;
+
+            video.muted = !video.muted;
+        }
+
+        function setVolume(event) {
+            const video = currentVideo;
+            if (!video) return;
+
+            const volumeSlider = event.currentTarget;
+            const clickX = event.offsetX;
+            const width = volumeSlider.offsetWidth;
+            const volume = clickX / width;
+            
+            video.volume = volume;
+        }
+
+        function toggleFullscreen() {
+            const videoContainer = document.querySelector('.video-container');
+            
+            if (document.fullscreenElement) {
+                document.exitFullscreen();
+            } else {
+                videoContainer.requestFullscreen();
+            }
+        }
+
+        // Close video when clicking outside
+        document.getElementById('videoModal').addEventListener('click', function(event) {
+            if (event.target === this) {
+                closeVideo();
+            }
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(event) {
+            if (currentVideo) {
+                switch(event.key) {
+                    case ' ':
+                        event.preventDefault();
+                        togglePlay();
+                        break;
+                    case 'Escape':
+                        closeVideo();
+                        break;
+                    case 'ArrowLeft':
+                        skipTime(-10);
+                        break;
+                    case 'ArrowRight':
+                        skipTime(10);
+                        break;
+                    case 'm':
+                        toggleMute();
+                        break;
+                }
+            }
+        });
+    </script>
+</body>
+</html>

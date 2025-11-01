@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marvel Studios | Universo Cinematográfico</title>
+    
+    <style>
+        /* Reset e configurações base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --marvel-red: #ED1D24;
+            --marvel-dark-red: #B71C1C;
+            --marvel-gold: #FFD700;
+            --marvel-dark: #0C0C0C;
+            --marvel-gray: #1A1A1A;
+            --marvel-light-gray: #2A2A2A;
+            --marvel-white: #FFFFFF;
+            --marvel-blue: #1976D2;
+            --gradient-hero: linear-gradient(135deg, #0C0C0C 0%, #1A1A1A 50%, #ED1D24 100%);
+            --gradient-card: linear-gradient(135deg, #1A1A1A 0%, #2A2A2A 100%);
+            --shadow-card: 0 8px 32px rgba(237, 29, 36, 0.2);
+            --shadow-hover: 0 12px 48px rgba(237, 29, 36, 0.4);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--marvel-dark);
+            color: var(--marvel-white);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        .marvel-header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(12, 12, 12, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 2px solid var(--marvel-red);
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .marvel-logo {
+            font-family: 'Impact', 'Arial Black', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--marvel-red);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+        }
+
+        .marvel-logo::after {
+            content: 'STUDIOS';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            font-size: 0.6rem;
+            color: var(--marvel-gold);
+            letter-spacing: 3px;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2.5rem;
+        }
+
+        .nav-link {
+            color: var(--marvel-white);
+            text-decoration: none;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--marvel-red);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--marvel-red);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 4px;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background: var(--marvel-red);
+            transition: 0.3s;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            background: var(--gradient-hero);
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="50" font-size="100" fill="%23ED1D24" opacity="0.1">⚡</text></svg>') repeat;
+            background-size: 200px;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        .hero-content {
+            z-index: 2;
+            max-width: 800px;
+        }
+
+        .hero-title {
+            font-family: 'Impact', 'Arial Black', sans-serif;
+            font-size: 4rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, var(--marvel-red), var(--marvel-gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: heroGlow 3s ease-in-out infinite alternate;
+        }
+
+        .hero-subtitle {
+            font-size: 1.4rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background: var(--marvel-red);
+            color: var(--marvel-white);
+            border: none;
+            padding: 15px 35px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary:hover {
+            background: var(--marvel-dark-red);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(237, 29, 36, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--marvel-white);
+            border: 2px solid var(--marvel-gold);
+            padding: 13px 35px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: var(--marvel-gold);
+            color: var(--marvel-dark);
+        }
+
+        @keyframes heroGlow {
+            0% { filter: drop-shadow(0 0 10px rgba(237, 29, 36, 0.5)); }
+            100% { filter: drop-shadow(0 0 20px rgba(237, 29, 36, 0.8)); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* Phases Section */
+        .phases-section {
+            padding: 100px 0;
+            background: var(--marvel-gray);
+        }
+
+        .section-title {
+            font-family: 'Impact', 'Arial Black', sans-serif;
+            font-size: 3rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 3rem;
+            text-transform: uppercase;
+            color: var(--marvel-red);
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: var(--marvel-gold);
+        }
+
+        .phases-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .phase-card {
+            background: var(--gradient-card);
+            border-radius: 15px;
+            padding: 2.5rem;
+            text-align: center;
+            box-shadow: var(--shadow-card);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid transparent;
+        }
+
+        .phase-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--marvel-red), var(--marvel-gold));
+        }
+
+        .phase-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-hover);
+            border-color: var(--marvel-red);
+        }
+
+        .phase-number {
+            font-family: 'Impact', 'Arial Black', sans-serif;
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--marvel-red);
+            margin-bottom: 1rem;
+        }
+
+        .phase-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--marvel-gold);
+        }
+
+        .phase-description {
+            opacity: 0.9;
+            margin-bottom: 1.5rem;
+        }
+
+        .phase-movies {
+            font-size: 0.9rem;
+            color: var(--marvel-red);
+            font-weight: 500;
+        }
+
+        /* Movies Section */
+        .movies-section {
+            padding: 100px 0;
+            background: var(--marvel-dark);
+        }
+
+        .movies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .movie-card {
+            background: var(--marvel-light-gray);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: var(--shadow-card);
+            transition: all 0.3s ease;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .movie-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .movie-poster {
+            height: 350px;
+            background: var(--gradient-hero);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .poster-icon {
+            font-size: 5rem;
+            opacity: 0.8;
+        }
+
+        .movie-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .movie-card:hover .movie-overlay {
+            opacity: 1;
+        }
+
+        .play-btn {
+            background: var(--marvel-red);
+            border: none;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            color: var(--marvel-white);
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .play-btn:hover {
+            transform: scale(1.1);
+            background: var(--marvel-dark-red);
+        }
+
+        .movie-info {
+            padding: 1.5rem;
+        }
+
+        .movie-title {
+            font-family: 'Impact', 'Arial Black', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--marvel-white);
+        }
+
+        .movie-year {
+            color: var(--marvel-red);
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .movie-description {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-bottom: 1rem;
+        }
+
+        .movie-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .stars {
+            color: var(--marvel-gold);
+        }
+
+        .rating-text {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Heroes Section */
+        .heroes-section {
+            padding: 100px 0;
+            background: var(--marvel-gray);
+        }
+
+        .heroes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .hero-card {
+            background: var(--marvel-light-gray);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: var(--shadow-card);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(237, 29, 36, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .hero-card:hover::before {
+            opacity: 1;
+        }
+
+        .hero-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .hero-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        .hero-name {
+            font-family: 'Impact', 'Arial Black', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--marvel-red);
+        }
+
+        .hero-alter-ego {
+            font-size: 0.9rem;
+            color: var(--marvel-gold);
+            margin-bottom: 1rem;
+        }
+
+        .hero-description {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        /* Stats Section */
+        .stats-section {
+            padding: 80px 0;
+            background: var(--marvel-dark);
+            text-align: center;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .stat-item {
+            padding: 2rem;
+        }
+
+        .stat-number {
+            font-family: 'Impact', 'Arial Black', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: var(--marvel-red);
+            margin-bottom: 0.5rem;
+            animation: countUp 2s ease-out;
+        }
+
+        .stat-label {
+            font-size: 1.1rem;
+            color: var(--marvel-gold);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        @keyframes countUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Footer */
+        .marvel-footer {
+            background: var(--marvel-dark);
+            border-top: 2px solid var(--marvel-red);
+            padding: 3rem 0 1rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h4 {
+            font-family: 'Impact', 'Arial Black', sans-serif;
+            font-size: 1.2rem;
+            color: var(--marvel-red);
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section a {
+            color: var(--marvel-white);
+            text-decoration: none;
+            opacity: 0.8;
+            transition: all 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            opacity: 1;
+            color: var(--marvel-gold);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid var(--marvel-light-gray);
+            opacity: 0.8;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hamburger {
+                display: flex;
+            }
+            
+            .nav-menu {
+                position: fixed;
+                top: 80px;
+                left: -100%;
+                width: 100%;
+                height: calc(100vh - 80px);
+                background: var(--marvel-dark);
+                flex-direction: column;
+                justify-content: flex-start;
+                align-items: center;
+                padding: 2rem 0;
+                transition: left 0.3s ease;
+            }
+            
+            .nav-menu.active {
+                left: 0;
+            }
+            
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .hero-buttons {
+                justify-content: center;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .phases-grid,
+            .movies-grid,
+            .heroes-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 0 15px;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(237, 29, 36, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--marvel-red);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="marvel-header">
+        <nav class="navbar">
+            <div class="marvel-logo">Marvel</div>
+            <ul class="nav-menu">
+                <li><a href="#home" class="nav-link">Início</a></li>
+                <li><a href="#phases" class="nav-link">Fases</a></li>
+                <li><a href="#movies" class="nav-link">Filmes</a></li>
+                <li><a href="#heroes" class="nav-link">Heróis</a></li>
+                <li><a href="#stats" class="nav-link">Estatísticas</a></li>
+            </ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">Universo Cinematográfico Marvel</h1>
+                <p class="hero-subtitle">Explore o maior universo de super-heróis do cinema. Mais de 30 filmes interconectados em uma saga épica que mudou Hollywood para sempre.</p>
+                <div class="hero-buttons">
+                    <button class="btn-primary">Assistir Agora</button>
+                    <button class="btn-secondary">Explorar Filmes</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Phases Section -->
+    <section id="phases" class="phases-section">
+        <div class="container">
+            <h2 class="section-title">Fases do MCU</h2>
+            <div class="phases-grid">
+                <div class="phase-card">
+                    <div class="phase-number">01</div>
+                    <h3 class="phase-title">Fase Um</h3>
+                    <p class="phase-description">O início de tudo. Os heróis se reúnem pela primeira vez para formar os Vingadores.</p>
+                    <div class="phase-movies">6 filmes • 2008-2012</div>
+                </div>
+                <div class="phase-card">
+                    <div class="phase-number">02</div>
+                    <h3 class="phase-title">Fase Dois</h3>
+                    <p class="phase-description">Consequências e expansão. Novos heróis surgem enquanto os Vingadores enfrentam novos desafios.</p>
+                    <div class="phase-movies">6 filmes • 2013-2015</div>
+                </div>
+                <div class="phase-card">
+                    <div class="phase-number">03</div>
+                    <h3 class="phase-title">Fase Três</h3>
+                    <p class="phase-description">A saga do infinito. Thanos emerge como a maior ameaça que o universo já enfrentou.</p>
+                    <div class="phase-movies">11 filmes • 2016-2019</div>
+                </div>
+                <div class="phase-card">
+                    <div class="phase-number">04</div>
+                    <h3 class="phase-title">Fase Quatro</h3>
+                    <p class="phase-description">Novos começos. Após Endgame, novos heróis assumem o manto e exploram o multiverso.</p>
+                    <div class="phase-movies">7 filmes • 2021-2023</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Movies Section -->
+    <section id="movies" class="movies-section">
+        <div class="container">
+            <h2 class="section-title">Filmes em Destaque</h2>
+            <div class="movies-grid">
+                <div class="movie-card">
+                    <div class="movie-poster">
+                        <div class="poster-icon">🦾</div>
+                        <div class="movie-overlay">
+                            <button class="play-btn">▶</button>
+                        </div>
+                    </div>
+                    <div class="movie-info">
+                        <h3 class="movie-title">Homem de Ferro</h3>
+                        <div class="movie-year">2008</div>
+                        <p class="movie-description">Tony Stark constrói uma armadura para escapar do cativeiro e se torna o Homem de Ferro.</p>
+                        <div class="movie-rating">
+                            <span class="stars">⭐⭐⭐⭐⭐</span>
+                            <span class="rating-text">9.2/10</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="movie-card">
+                    <div class="movie-poster">
+                        <div class="poster-icon">🛡️</div>
+                        <div class="movie-overlay">
+                            <button class="play-btn">▶</button>
+                        </div>
+                    </div>
+                    <div class="movie-info">
+                        <h3 class="movie-title">Capitão América</h3>
+                        <div class="movie-year">2011</div>
+                        <p class="movie-description">Steve Rogers se torna o primeiro vingador durante a Segunda Guerra Mundial.</p>
+                        <div class="movie-rating">
+                            <span class="stars">⭐⭐⭐⭐⭐</span>
+                            <span class="rating-text">8.8/10</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="movie-card">
+                    <div class="movie-poster">
+                        <div class="poster-icon">⚡</div>
+                        <div class="movie-overlay">
+                            <button class="play-btn">▶</button>
+                        </div>
+                    </div>
+                    <div class="movie-info">
+                        <h3 class="movie-title">Thor</h3>
+                        <div class="movie-year">2011</div>
+                        <p class="movie-description">O Deus do Trovão é banido de Asgard e deve provar seu valor na Terra.</p>
+                        <div class="movie-rating">
+                            <span class="stars">⭐⭐⭐⭐⭐</span>
+                            <span class="rating-text">8.5/10</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="movie-card">
+                    <div class="movie-poster">
+                        <div class="poster-icon">💚</div>
+                        <div class="movie-overlay">
+                            <button class="play-btn">▶</button>
+                        </div>
+                    </div>
+                    <div class="movie-info">
+                        <h3 class="movie-title">Hulk</h3>
+                        <div class="movie-year">2008</div>
+                        <p class="movie-description">Bruce Banner luta para controlar o monstro verde que vive dentro dele.</p>
+                        <div class="movie-rating">
+                            <span class="stars">⭐⭐⭐⭐⭐</span>
+                            <span class="rating-text">8.3/10</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="movie-card">
+                    <div class="movie-poster">
+                        <div class="poster-icon">🕷️</div>
+                        <div class="movie-overlay">
+                            <button class="play-btn">▶</button>
+                        </div>
+                    </div>
+                    <div class="movie-info">
+                        <h3 class="movie-title">Homem-Aranha</h3>
+                        <div class="movie-year">2017</div>
+                        <p class="movie-description">Peter Parker equilibra sua vida de estudante com suas responsabilidades como herói.</p>
+                        <div class="movie-rating">
+                            <span class="stars">⭐⭐⭐⭐⭐</span>
+                            <span class="rating-text">9.1/10</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="movie-card">
+                    <div class="movie-poster">
+                        <div class="poster-icon">🖤</div>
+                        <div class="movie-overlay">
+                            <button class="play-btn">▶</button>
+                        </div>
+                    </div>
+                    <div class="movie-info">
+                        <h3 class="movie-title">Pantera Negra</h3>
+                        <div class="movie-year">2018</div>
+                        <p class="movie-description">T'Challa retorna a Wakanda para assumir o trono e se tornar o novo Pantera Negra.</p>
+                        <div class="movie-rating">
+                            <span class="stars">⭐⭐⭐⭐⭐</span>
+                            <span class="rating-text">9.4/10</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Heroes Section -->
+    <section id="heroes" class="heroes-section">
+        <div class="container">
+            <h2 class="section-title">Heróis Icônicos</h2>
+            <div class="heroes-grid">
+                <div class="hero-card">
+                    <div class="hero-icon">🦾</div>
+                    <h3 class="hero-name">Homem de Ferro</h3>
+                    <div class="hero-alter-ego">Tony Stark</div>
+                    <p class="hero-description">Gênio, bilionário, playboy, filantropo. O homem que iniciou tudo.</p>
+                </div>
+                <div class="hero-card">
+                    <div class="hero-icon">🛡️</div>
+                    <h3 class="hero-name">Capitão América</h3>
+                    <div class="hero-alter-ego">Steve Rogers</div>
+                    <p class="hero-description">O primeiro vingador e símbolo de esperança e justiça.</p>
+                </div>
+                <div class="hero-card">
+                    <div class="hero-icon">⚡</div>
+                    <h3 class="hero-name">Thor</h3>
+                    <div class="hero-alter-ego">Deus do Trovão</div>
+                    <p class="hero-description">Príncipe de Asgard e protetor dos Nove Reinos.</p>
+                </div>
+                <div class="hero-card">
+                    <div class="hero-icon">💚</div>
+                    <h3 class="hero-name">Hulk</h3>
+                    <div class="hero-alter-ego">Bruce Banner</div>
+                    <p class="hero-description">O cientista mais inteligente que se transforma no mais forte.</p>
+                </div>
+                <div class="hero-card">
+                    <div class="hero-icon">🏹</div>
+                    <h3 class="hero-name">Gavião Arqueiro</h3>
+                    <div class="hero-alter-ego">Clint Barton</div>
+                    <p class="hero-description">Mestre arqueiro com pontaria perfeita e coração de herói.</p>
+                </div>
+                <div class="hero-card">
+                    <div class="hero-icon">🕸️</div>
+                    <h3 class="hero-name">Viúva Negra</h3>
+                    <div class="hero-alter-ego">Natasha Romanoff</div>
+                    <p class="hero-description">Espiã letal que encontrou redenção lutando pelos inocentes.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section id="stats" class="stats-section">
+        <div class="container">
+            <h2 class="section-title">Universo em Números</h2>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">30+</div>
+                    <div class="stat-label">Filmes</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">28B+</div>
+                    <div class="stat-label">Bilheteria</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">15+</div>
+                    <div class="stat-label">Anos</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">50+</div>
+                    <div class="stat-label">Heróis</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="marvel-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Filmes</h4>
+                    <ul>
+                        <li><a href="#">Fase Um</a></li>
+                        <li><a href="#">Fase Dois</a></li>
+                        <li><a href="#">Fase Três</a></li>
+                        <li><a href="#">Fase Quatro</a></li>
+                        <li><a href="#">Próximos Lançamentos</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Heróis</h4>
+                    <ul>
+                        <li><a href="#">Vingadores</a></li>
+                        <li><a href="#">Guardiões da Galáxia</a></li>
+                        <li><a href="#">X-Men</a></li>
+                        <li><a href="#">Quarteto Fantástico</a></li>
+                        <li><a href="#">Defensores</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Universo</h4>
+                    <ul>
+                        <li><a href="#">Terra-616</a></li>
+                        <li><a href="#">Multiverso</a></li>
+                        <li><a href="#">Linha do Tempo</a></li>
+                        <li><a href="#">Localizações</a></li>
+                        <li><a href="#">Organizações</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Mais</h4>
+                    <ul>
+                        <li><a href="#">Quadrinhos</a></li>
+                        <li><a href="#">Jogos</a></li>
+                        <li><a href="#">Séries</a></li>
+                        <li><a href="#">Produtos</a></li>
+                        <li><a href="#">Notícias</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Marvel Studios. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Marvel App JavaScript
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Marvel Studios App loaded! ⚡');
+            
+            // Mobile Navigation
+            const hamburger = document.querySelector('.hamburger');
+            const navMenu = document.querySelector('.nav-menu');
+            
+            if (hamburger && navMenu) {
+                hamburger.addEventListener('click', function() {
+                    hamburger.classList.toggle('active');
+                    navMenu.classList.toggle('active');
+                    
+                    // Animate hamburger
+                    const spans = hamburger.querySelectorAll('span');
+                    if (hamburger.classList.contains('active')) {
+                        spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
+                        spans[1].style.opacity = '0';
+                        spans[2].style.transform = 'rotate(-45deg) translate(7px, -6px)';
+                    } else {
+                        spans[0].style.transform = 'none';
+                        spans[1].style.opacity = '1';
+                        spans[2].style.transform = 'none';
+                    }
+                });
+                
+                // Close menu on link click
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    link.addEventListener('click', () => {
+                        hamburger.classList.remove('active');
+                        navMenu.classList.remove('active');
+                        
+                        const spans = hamburger.querySelectorAll('span');
+                        spans[0].style.transform = 'none';
+                        spans[1].style.opacity = '1';
+                        spans[2].style.transform = 'none';
+                    });
+                });
+            }
+            
+            // Smooth scrolling
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e

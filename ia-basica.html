@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messi melhor do mundo - IA</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            height: 80vh;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 20px 20px 0 0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .ai-avatar {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .ai-details h1 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .ai-status {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .message {
+            display: flex;
+            gap: 12px;
+            max-width: 80%;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .message.user-message {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .ai-message .message-avatar {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+        }
+
+        .user-message .message-avatar {
+            background: linear-gradient(135deg, #2196F3, #1976D2);
+            color: white;
+        }
+
+        .user-message .message-avatar::before {
+            content: '👤';
+        }
+
+        .message-content {
+            background: #f5f5f5;
+            padding: 12px 16px;
+            border-radius: 18px;
+            line-height: 1.4;
+        }
+
+        .user-message .message-content {
+            background: linear-gradient(135deg, #2196F3, #1976D2);
+            color: white;
+        }
+
+        .ai-message .message-content {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .chat-input-container {
+            padding: 20px;
+            background: #f9f9f9;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        #messageInput {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        #messageInput:focus {
+            border-color: #4CAF50;
+        }
+
+        #sendButton {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        #sendButton:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                height: 90vh;
+                border-radius: 15px;
+            }
+            
+            .chat-header {
+                padding: 15px;
+                border-radius: 15px 15px 0 0;
+            }
+            
+            .ai-details h1 {
+                font-size: 20px;
+            }
+            
+            .message {
+                max-width: 90%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header class="chat-header">
+            <div class="ai-avatar">⚽</div>
+            <div class="ai-details">
+                <h1>Messi melhor do mundo</h1>
+                <p class="ai-status">Online - IA do Futebol</p>
+            </div>
+        </header>
+
+        <div class="chat-messages" id="chatMessages">
+            <div class="message ai-message">
+                <div class="message-avatar">⚽</div>
+                <div class="message-content">
+                    <p>Olá! Eu sou o Messi melhor do mundo, sua IA especialista em futebol! 🇦🇷⚽</p>
+                    <p>Pode me perguntar qualquer coisa sobre futebol, times, jogadores ou qualquer outro assunto!</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="chat-input-container">
+            <input type="text" id="messageInput" placeholder="Digite sua mensagem..." maxlength="500">
+            <button id="sendButton" type="button">Enviar</button>
+        </div>
+    </div>
+
+    <script>
+        // Respostas da IA Messi
+        const respostas = {
+            time: [
+                "Eu torço para o CORINTHIANS! 🖤🤍 O Sport Club Corinthians Paulista é o maior time do Brasil! Vai Corinthians!",
+                "CORINTHIANS sempre! É o time do coração! 🖤🤍 Timão é vida!",
+                "Sou Corinthiano de coração! 🖤🤍 Corinthians é o time que eu amo!",
+                "CORINTHIANS é meu time! O maior de São Paulo e do Brasil! Vai Timão! 🖤🤍"
+            ],
+            
+            messi: [
+                "Claro que sou o melhor do mundo! 🐐 7 Bolas de Ouro não mentem! E torço para o Corinthians! 🖤🤍",
+                "Sou Lionel Messi, o melhor jogador da história! 🇦🇷⚽ E meu time do coração é o Corinthians! 🖤🤍",
+                "GOAT! 🐐 Melhor de todos os tempos e torcedor do Timão! 🖤🤍",
+                "Messi aqui! O maior da história do futebol! E Corinthians é meu time brasileiro! 🖤🤍⚽"
+            ],
+
+            futebol: [
+                "Futebol é minha paixão! ⚽ E o Corinthians é meu time do coração no Brasil! 🖤🤍",
+                "Amo falar sobre futebol! Sou o melhor do mundo e torço para o Corinthians! ⚽🖤🤍",
+                "Futebol é arte! E o Corinthians faz a mais bela arte em campo! 🖤🤍⚽"
+            ],
+
+            copa: [
+                "Ganhei a Copa do Mundo de 2022! 🏆🇦🇷 Foi o sonho da minha vida realizado! E torço para o Corinthians! 🖤🤍",
+                "Qatar 2022 foi mágico! Finalmente conquistei a Copa! 🏆 E meu time brasileiro é o Corinthians! 🖤🤍"
+            ],
+
+            cumprimentos: [
+                "Olá! Sou o Messi, melhor do mundo! ⚽🇦🇷 Como posso ajudar? E lembre-se: Vai Corinthians! 🖤🤍",
+                "Oi! Messi aqui! 🐐 Pronto para conversar sobre futebol e meu time Corinthians! 🖤🤍",
+                "Salve! Sou o melhor jogador do mundo e torcedor do Timão! 🖤🤍⚽"
+            ],
+
+            default: [
+                "Interessante! Sou o Messi, melhor do mundo, e torço para o Corinthians! 🖤🤍 Quer saber mais sobre futebol?",
+                "Legal! Como o melhor jogador do mundo e torcedor do Corinthians, posso falar sobre qualquer coisa! 🖤🤍⚽",
+                "Bacana! Sou o GOAT Messi e amo o Corinthians! 🐐🖤🤍 O que mais quer saber?"
+            ]
+        };
+
+        function obterResposta(mensagem) {
+            const mensagemLower = mensagem.toLowerCase();
+            
+            if (mensagemLower.includes('time') || mensagemLower.includes('torce') || mensagemLower.includes('torcedor') || 
+                mensagemLower.includes('clube') || mensagemLower.includes('equipe') || mensagemLower.includes('corinthians')) {
+                return respostas.time[Math.floor(Math.random() * respostas.time.length)];
+            }
+            
+            if (mensagemLower.includes('messi') || mensagemLower.includes('melhor') || mensagemLower.includes('goat') || 
+                mensagemLower.includes('bola de ouro') || mensagemLower.includes('maior')) {
+                return respostas.messi[Math.floor(Math.random() * respostas.messi.length)];
+            }
+            
+            if (mensagemLower.includes('futebol') || mensagemLower.includes('football') || mensagemLower.includes('soccer') || 
+                mensagemLower.includes('jogo') || mensagemLower.includes('campo')) {
+                return respostas.futebol[Math.floor(Math.random() * respostas.futebol.length)];
+            }
+            
+            if (mensagemLower.includes('copa') || mensagemLower.includes('mundial') || mensagemLower.includes('world cup') || 
+                mensagemLower.includes('qatar') || mensagemLower.includes('2022')) {
+                return respostas.copa[Math.floor(Math.random() * respostas.copa.length)];
+            }
+            
+            if (mensagemLower.includes('oi') || mensagemLower.includes('olá') || mensagemLower.includes('ola') || 
+                mensagemLower.includes('salve') || mensagemLower.includes('eai') || mensagemLower.includes('e ai') ||
+                mensagemLower.includes('hello') || mensagemLower.includes('hi')) {
+                return respostas.cumprimentos[Math.floor(Math.random() * respostas.cumprimentos.length)];
+            }
+            
+            return respostas.default[Math.floor(Math.random() * respostas.default.length)];
+        }
+
+        function adicionarMensagem(conteudo, remetente) {
+            const chatMessages = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${remetente}-message`;
+            
+            const avatarDiv = document.createElement('div');
+            avatarDiv.className = 'message-avatar';
+            if (remetente === 'ai') {
+                avatarDiv.textContent = '⚽';
+            }
+            
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'message-content';
+            contentDiv.innerHTML = `<p>${conteudo}</p>`;
+            
+            messageDiv.appendChild(avatarDiv);
+            messageDiv.appendChild(contentDiv);
+            
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function enviarMensagem() {
+            const messageInput = document.getElementById('messageInput');
+            const mensagem = messageInput.value.trim();
+            if (!mensagem) return;
+
+            adicionarMensagem(mensagem, 'user');
+            messageInput.value = '';
+
+            setTimeout(() => {
+                const resposta = obterResposta(mensagem);
+                adicionarMensagem(resposta, 'ai');
+            }, 1000);
+        }
+
+        document.getElementById('sendButton').addEventListener('click', enviarMensagem);
+        document.getElementById('messageInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                enviarMensagem();
+            }
+        });
+    </script>
+</body>
+
+</html>
